@@ -1,0 +1,158 @@
+# Localize Argument Inlay Plugin
+
+## 项目简介
+
+Localize Inlay 是一个 VS Code 插件，用于在各种编程语言的方法调用中，当整数字面量实参命中 JSON 配置中的 `sn` 时，在参数后内联显示对应的 `str` 文本。
+
+## 功能特点
+
+- **内联提示**：在整数字面量参数后显示对应的本地化文本
+- **支持多种编程语言**：Java、C#、JavaScript、TypeScript、Python、C++ 等所有常见编程语言
+- **支持多种调用形式**：
+  - 普通调用：`LocalUtils.GetString(1001)`
+  - 嵌套调用：`LocalUtils.GetString(LocalUtils.GetString(1001))`
+  - 条件表达式：`LocalUtils.GetString(true ? 1001 : 1002)`
+  - 多参数调用：`LocalUtils.GetString(1001, "param", 1002)`
+- **支持多种方法名**：在插件设置中配置多个本地化方法名，用逗号分隔
+- **实时刷新**：当配置文件 JSON 更新时，实时刷新内联提示显示
+- **设置项实时更新**：当设置项的值改变时，重新刷新内联提示显示
+- **代码补全**：在编辑文件时，如果输入的字符串在 JSON 文件的 str 中有匹配的值，可选择对应的 sn 插入到编辑文本中
+- **空格处理**：支持方法名和括号之间的任意空格
+- **JSON 配置**：通过 JSON 文件配置 `sn` 到 `str` 的映射
+- **可自定义配置路径**：在插件设置中自定义 JSON 配置文件路径
+
+## 安装方法
+
+### 从本地安装
+1. 下载插件的 VSIX 文件
+2. 打开 VS Code
+3. 进入 `Extensions` 面板，点击 `...` 按钮
+4. 选择 "Install from VSIX..."
+5. 选择下载的 VSIX 文件
+6. 重启 VS Code
+
+## 使用方法
+
+1. **配置 JSON 文件**：创建一个 JSON 文件，包含 `sn` 和 `str` 字段的映射，例如：
+   ```json
+   [
+     { "sn": 1001, "str": "欢迎使用系统" },
+     { "sn": 1002, "str": "登录成功" },
+     { "sn": 1003, "str": "退出系统" }
+   ]
+   ```
+
+2. **配置插件**：
+   - 进入 `Settings > Localize Argument Inlay`
+   - 在 "JSON 配置路径" 中输入 JSON 文件的路径
+   - 在 "方法名" 中输入本地化方法名，多个方法名用逗号分隔
+
+3. **使用插件**：在代码中使用 `LocalUtils.GetString()` 等本地化方法时，插件会自动在整数字面量参数后显示对应的本地化文本。
+
+## 配置说明
+
+### JSON 配置格式
+
+JSON 文件应该包含一个对象数组，每个对象包含 `sn` 和 `str` 字段：
+
+```json
+[
+  { "sn": 1001, "str": "本地化文本1" },
+  { "sn": 1002, "str": "本地化文本2" }
+]
+```
+
+### 插件设置
+
+- **JSON 配置路径**：JSON 配置文件的路径，支持绝对路径和相对路径（相对于工作区根目录）
+- **方法名**：本地化方法名，多个方法名用逗号分隔，支持带类名和无类名的方法名，例如：`LocalUtils.GetString,GetString`
+- **默认路径**：`ConfLocalize.json`
+
+## 示例
+
+### 输入
+
+```java
+// 普通调用
+String text = LocalUtils.GetString(1001);
+
+// 嵌套调用
+String nestedText = LocalUtils.GetString(LocalUtils.GetString(1002));
+
+// 条件表达式
+String statusText = LocalUtils.GetString(isActive ? 1001 : 1003);
+
+// 多参数调用
+String multiParamText = LocalUtils.GetString(1001, "extra", LocalUtils.GetString(1002));
+```
+
+### 输出
+
+```java
+// 普通调用（显示内联提示）
+String text = LocalUtils.GetString(1001 /* 欢迎使用系统 */);
+
+// 嵌套调用（显示内联提示）
+String nestedText = LocalUtils.GetString(LocalUtils.GetString(1002 /* 登录成功 */));
+
+// 条件表达式（显示内联提示）
+String statusText = LocalUtils.GetString(isActive ? 1001 /* 欢迎使用系统 */ : 1003 /* 退出系统 */);
+
+// 多参数调用（显示内联提示）
+String multiParamText = LocalUtils.GetString(1001 /* 欢迎使用系统 */, "extra", LocalUtils.GetString(1002 /* 登录成功 */));
+```
+
+## 开发指南
+
+### 环境要求
+
+- Node.js 18+
+- VS Code
+- TypeScript
+
+### 构建项目
+
+1. 克隆项目：
+   ```bash
+   git clone <项目地址>
+   cd localize-argument-inlay
+   ```
+
+2. 安装依赖：
+   ```bash
+   npm install
+   ```
+
+3. 编译项目：
+   ```bash
+   npm run compile
+   ```
+
+4. 运行插件：
+   - 按 `F5` 在 VS Code 中启动调试会话
+   - 或使用 `npm run watch` 启动监视模式，自动编译更改
+
+### 项目结构
+
+```
+localize-argument-inlay/
+├── src/
+│   ├── providers/
+│   │   ├── InlayProvider.ts         # 内联提示功能实现
+│   │   └── CompletionProvider.ts    # 代码补全功能实现
+│   ├── utils/
+│   │   ├── ConfigManager.ts         # 配置管理
+│   │   └── Utils.ts                 # 工具函数
+│   └── extension.ts                 # 插件主文件，注册提供者
+├── out/                             # 编译输出目录
+├── ConfLocalize.json                # 示例 JSON 配置文件
+├── package.json                     # 插件配置和依赖管理
+├── tsconfig.json                    # TypeScript 配置文件
+└── README.md                        # 项目说明
+```
+
+## 联系方式
+
+- 作者：zmabel
+- 邮箱：<dzheming@163.com>
+- 项目地址：<https://github.com/dzheming/vslocalizeinlay.git>

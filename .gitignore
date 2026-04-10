@@ -1,0 +1,31 @@
+# Logs
+logs
+*.log
+log.txt
+
+# Dependencies
+node_modules
+
+# Build output
+out
+
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+
+# Environment variables
+.env
+
+# OS generated files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+
+# Test files
+coverage
+
+# Package manager files
+package-lock.json

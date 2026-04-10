@@ -1,0 +1,49 @@
+{
+  "name": "localize-argument-inlay",
+  "displayName": "Localize Argument Inlay",
+  "description": "在 Java / C# 方法调用中，当整数字面量实参命中 JSON 配置中的 sn 时，在参数后内联显示对应的 str 文本。",
+  "version": "1.0.0",
+  "publisher": "zmabel",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Localize Argument Inlay",
+      "properties": {
+        "localizeInlay.jsonConfigPath": {
+          "type": "string",
+          "default": "ConfLocalize.json",
+          "description": "JSON 配置文件路径"
+        },
+        "localizeInlay.methodNames": {
+          "type": "string",
+          "default": "LocalUtils.GetString,GetString",
+          "description": "本地化方法名，多个方法名用逗号分隔"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/vscode": "^1.75.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1",
+    "vscode-languageserver": "^9.0.1"
+  }
+}
