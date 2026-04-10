@@ -1,7 +1,7 @@
 {
-  "name": "localize-argument-inlay",
+  "name": "localizeinlay",
   "displayName": "Localize Argument Inlay",
-  "description": "在 Java / C# 方法调用中，当整数字面量实参命中 JSON 配置中的 sn 时，在参数后内联显示对应的 str 文本。",
+  "description": "在方法调用中，当整数字面量实参命中 JSON 配置中的 sn 时，在参数后内联显示对应的 str 文本。",
   "version": "1.0.0",
   "publisher": "zmabel",
   "engines": {
